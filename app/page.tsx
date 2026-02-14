@@ -31,29 +31,33 @@ const StarfieldBackground = () => {
       y: number;
       z: number;
       size: number;
+      canvasWidth: number;
+      canvasHeight: number;
 
-      constructor() {
-        this.x = Math.random() * canvas.width - canvas.width / 2;
-        this.y = Math.random() * canvas.height - canvas.height / 2;
-        this.z = Math.random() * canvas.width;
+      constructor(canvasWidth: number, canvasHeight: number) {
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
+        this.x = Math.random() * canvasWidth - canvasWidth / 2;
+        this.y = Math.random() * canvasHeight - canvasHeight / 2;
+        this.z = Math.random() * canvasWidth;
         this.size = 0;
       }
 
       update(speed: number) {
         this.z -= speed;
         if (this.z <= 0) {
-          this.z = canvas.width;
-          this.x = Math.random() * canvas.width - canvas.width / 2;
-          this.y = Math.random() * canvas.height - canvas.height / 2;
+          this.z = this.canvasWidth;
+          this.x = Math.random() * this.canvasWidth - this.canvasWidth / 2;
+          this.y = Math.random() * this.canvasHeight - this.canvasHeight / 2;
         }
       }
 
-      draw() {
-        const x = (this.x / this.z) * canvas.width + canvas.width / 2;
-        const y = (this.y / this.z) * canvas.height + canvas.height / 2;
-        const size = (1 - this.z / canvas.width) * 2;
+      draw(ctx: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) {
+        const x = (this.x / this.z) * canvasWidth + canvasWidth / 2;
+        const y = (this.y / this.z) * canvasHeight + canvasHeight / 2;
+        const size = (1 - this.z / canvasWidth) * 2;
 
-        const brightness = 1 - this.z / canvas.width;
+        const brightness = 1 - this.z / canvasWidth;
         const hue = 180 + brightness * 30;
 
         ctx.fillStyle = `hsla(${hue}, 70%, ${50 + brightness * 50}%, ${brightness})`;
@@ -67,8 +71,8 @@ const StarfieldBackground = () => {
           ctx.beginPath();
           ctx.moveTo(x, y);
           ctx.lineTo(
-              (this.x / (this.z + 5)) * canvas.width + canvas.width / 2,
-              (this.y / (this.z + 5)) * canvas.height + canvas.height / 2
+              (this.x / (this.z + 5)) * canvasWidth + canvasWidth / 2,
+              (this.y / (this.z + 5)) * canvasHeight + canvasHeight / 2
           );
           ctx.stroke();
         }
@@ -77,7 +81,7 @@ const StarfieldBackground = () => {
 
     const stars: Star[] = [];
     for (let i = 0; i < 800; i++) {
-      stars.push(new Star());
+      stars.push(new Star(canvas.width, canvas.height));
     }
 
     let speed = 2;
@@ -88,7 +92,7 @@ const StarfieldBackground = () => {
 
       stars.forEach((star) => {
         star.update(speed);
-        star.draw();
+        star.draw(ctx, canvas.width, canvas.height);
       });
 
       requestAnimationFrame(animate);
@@ -117,54 +121,54 @@ const NebulaEffect = () => {
         <div className="nebula nebula-3" />
 
         <style jsx>{`
-          .nebula {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.15;
-            mix-blend-mode: screen;
-            animation: float 30s ease-in-out infinite;
-          }
+        .nebula {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(120px);
+          opacity: 0.15;
+          mix-blend-mode: screen;
+          animation: float 30s ease-in-out infinite;
+        }
 
-          .nebula-1 {
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, #0ea5e9 0%, #06b6d4 40%, transparent 70%);
-            top: -20%;
-            right: -10%;
-            animation-delay: 0s;
-          }
+        .nebula-1 {
+          width: 800px;
+          height: 800px;
+          background: radial-gradient(circle, #0ea5e9 0%, #06b6d4 40%, transparent 70%);
+          top: -20%;
+          right: -10%;
+          animation-delay: 0s;
+        }
 
-          .nebula-2 {
-            width: 1000px;
-            height: 1000px;
-            background: radial-gradient(circle, #14b8a6 0%, #0ea5e9 40%, transparent 70%);
-            bottom: -30%;
-            left: -20%;
-            animation-delay: -10s;
-          }
+        .nebula-2 {
+          width: 1000px;
+          height: 1000px;
+          background: radial-gradient(circle, #14b8a6 0%, #0ea5e9 40%, transparent 70%);
+          bottom: -30%;
+          left: -20%;
+          animation-delay: -10s;
+        }
 
-          .nebula-3 {
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, #06b6d4 0%, #14b8a6 40%, transparent 70%);
-            top: 40%;
-            left: 30%;
-            animation-delay: -20s;
-          }
+        .nebula-3 {
+          width: 600px;
+          height: 600px;
+          background: radial-gradient(circle, #06b6d4 0%, #14b8a6 40%, transparent 70%);
+          top: 40%;
+          left: 30%;
+          animation-delay: -20s;
+        }
 
-          @keyframes float {
-            0%, 100% {
-              transform: translate(0, 0) scale(1);
-            }
-            33% {
-              transform: translate(50px, -50px) scale(1.1);
-            }
-            66% {
-              transform: translate(-30px, 30px) scale(0.9);
-            }
+        @keyframes float {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
           }
-        `}</style>
+          33% {
+            transform: translate(50px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-30px, 30px) scale(0.9);
+          }
+        }
+      `}</style>
       </div>
   );
 };
@@ -544,7 +548,7 @@ export default function Home() {
             <SkillsSection />
           </div>
 
-          {/* CERTIFICATES SECTION - Placeholder for you to fill in later */}
+          {/* CERTIFICATES SECTION */}
           <div className="relative w-full bg-gradient-to-b from-[#0A1525] to-[#050A14]">
             <CertificatesSection />
           </div>
@@ -560,125 +564,125 @@ export default function Home() {
 
         {/* Global Styles */}
         <style jsx global>{`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
 
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(50px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(50px);
           }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
 
-          @keyframes shimmer {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
+        @keyframes shimmer {
+          0% {
+            background-position: 0% 50%;
           }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
 
-          @keyframes scan {
-            0% {
-              transform: translateY(-100%);
-            }
-            100% {
-              transform: translateY(100%);
-            }
+        @keyframes scan {
+          0% {
+            transform: translateY(-100%);
           }
+          100% {
+            transform: translateY(100%);
+          }
+        }
 
-          @keyframes scrollDown {
-            0% {
-              transform: translateY(0);
-              opacity: 1;
-            }
-            100% {
-              transform: translateY(20px);
-              opacity: 0;
-            }
+        @keyframes scrollDown {
+          0% {
+            transform: translateY(0);
+            opacity: 1;
           }
+          100% {
+            transform: translateY(20px);
+            opacity: 0;
+          }
+        }
 
-          @keyframes float {
-            0%, 100% {
-              transform: translateY(0px);
-            }
-            50% {
-              transform: translateY(-15px);
-            }
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
           }
+          50% {
+            transform: translateY(-15px);
+          }
+        }
 
-          @keyframes spin {
-            from {
-              transform: rotate(0deg);
-            }
-            to {
-              transform: rotate(360deg);
-            }
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
           }
+          to {
+            transform: rotate(360deg);
+          }
+        }
 
-          .animate-fadeInUp {
-            animation: fadeInUp 1s ease-out backwards;
-          }
+        .animate-fadeInUp {
+          animation: fadeInUp 1s ease-out backwards;
+        }
 
-          .animate-shimmer {
-            animation: shimmer 5s ease infinite;
-          }
+        .animate-shimmer {
+          animation: shimmer 5s ease infinite;
+        }
 
-          .animate-scan {
-            animation: scan 4s ease-in-out infinite;
-          }
+        .animate-scan {
+          animation: scan 4s ease-in-out infinite;
+        }
 
-          .animate-scrollDown {
-            animation: scrollDown 2s ease-in-out infinite;
-          }
+        .animate-scrollDown {
+          animation: scrollDown 2s ease-in-out infinite;
+        }
 
-          .animate-float {
-            animation: float 3s ease-in-out infinite;
-          }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
 
-          .animate-spin-slow {
-            animation: spin 8s linear infinite;
-          }
+        .animate-spin-slow {
+          animation: spin 8s linear infinite;
+        }
 
-          .animate-spin-reverse {
-            animation: spin 10s linear infinite reverse;
-          }
+        .animate-spin-reverse {
+          animation: spin 10s linear infinite reverse;
+        }
 
-          html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
-          }
+        html {
+          scroll-behavior: smooth;
+          scroll-padding-top: 80px;
+        }
 
-          ::-webkit-scrollbar {
-            width: 12px;
-          }
+        ::-webkit-scrollbar {
+          width: 12px;
+        }
 
-          ::-webkit-scrollbar-track {
-            background: #050A14;
-            border-left: 1px solid rgba(6, 182, 212, 0.1);
-          }
+        ::-webkit-scrollbar-track {
+          background: #050A14;
+          border-left: 1px solid rgba(6, 182, 212, 0.1);
+        }
 
-          ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #06b6d4, #14b8a6);
-            border-radius: 6px;
-            border: 2px solid #050A14;
-          }
+        ::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, #06b6d4, #14b8a6);
+          border-radius: 6px;
+          border: 2px solid #050A14;
+        }
 
-          ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #0ea5e9, #06b6d4);
-          }
+        ::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, #0ea5e9, #06b6d4);
+        }
 
-          h1, h2, h3 {
-            font-feature-settings: "ss01", "ss02", "cv01", "cv02";
-          }
-        `}</style>
+        h1, h2, h3 {
+          font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+        }
+      `}</style>
       </div>
   );
 }

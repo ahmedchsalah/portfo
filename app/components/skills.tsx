@@ -152,9 +152,9 @@ export default function SkillsSection() {
                     className="grid grid-cols-2 md:grid-cols-4 gap-6"
                 >
                     {[
-                        { label: "Frontend", count: "5+", icon: "🎨" },
-                        { label: "Backend", count: "4+", icon: "⚙️" },
-                        { label: "Cloud & AI", count: "3+", icon: "☁️" },
+                        { label: "Frontend", count: "3+", icon: "🎨" },
+                        { label: "Backend", count: "2+", icon: "⚙️" },
+                        { label: "Cloud & AI", count: "1+", icon: "☁️" },
                         { label: "Years Exp", count: "3+", icon: "🚀" },
                     ].map((stat, i) => (
                         <motion.div

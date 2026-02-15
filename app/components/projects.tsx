@@ -8,7 +8,7 @@ const projects = [
     {
         title: "Food Delivery Website",
         description: "Modern frontend website for food delivery using Vite + React with smooth animations and responsive design",
-        liveUrl: "https://food-website-jgzgzlv4r-ahmed-chikh-salahs-projects.vercel.app/",
+        liveUrl: "https://food-website-sooty-xi.vercel.app/",
         githubUrl: null,
         image: "/food.png",
         tech: ["React", "Vite", "CSS3"],
@@ -28,7 +28,7 @@ const projects = [
     {
         title: "Travel Website",
         description: "Next.js powered travel platform with Tailwind CSS featuring modern UI and optimal performance",
-        liveUrl: "https://travel-website-bgi9xclls-ahmed-chikh-salahs-projects.vercel.app/",
+        liveUrl: "https://travel-website-rho-amber.vercel.app/",
         githubUrl: null,
         image: "/travel.png",
         tech: ["Next.js", "Tailwind", "TypeScript"],
